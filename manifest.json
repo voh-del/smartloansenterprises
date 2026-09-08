@@ -1,0 +1,24 @@
+{
+  "name": "Smart Loans Enterprises",
+  "short_name": "Smart Loans",
+  "description": "Fast, Secure and Reliable Loan Services",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7fb",
+  "theme_color": "#003366",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

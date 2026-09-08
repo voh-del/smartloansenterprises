@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registration Fee Payment - Smart Loans Enterprises</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Smart Loans Enterprises</h1>
+</header>
+
+
+<section class="payment-section">
+
+    <h2>Registration Fee Payment</h2>
+
+    <p>
+        Please complete your registration by paying
+        <strong>KES 500</strong> registration fee.
+    </p>
+
+
+    <div class="registration-notice">
+
+        <p>
+            After successful payment, your application will be processed.
+            If your loan is approved and later repaid according to your
+            loan agreement, the registration fee will be refunded as
+            described in our Terms and Conditions.
+        </p>
+
+    </div>
+
+
+    <form id="paymentForm">
+
+        <label for="fullname">
+            Full Name
+        </label>
+
+        <input
+            type="text"
+            id="fullname"
+            name="fullname"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+        >
+
+
+        <label for="phone">
+            M-PESA Phone Number
+        </label>
+
+        <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="2547XXXXXXXX"
+            inputmode="numeric"
+            autocomplete="tel"
+            pattern="2547[0-9]{8}"
+            title="Enter your number in the format 2547XXXXXXXX"
+            required
+        >
+
+
+        <label for="amount">
+            Amount
+        </label>
+
+        <input
+            type="text"
+            id="amount"
+            value="KES 500"
+            readonly
+        >
+
+
+        <button
+            type="submit"
+            id="payButton"
+        >
+            Pay Registration Fee
+        </button>
+
+
+        <p
+            id="paymentMessage"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+    </form>
+
+</section>
+
+
+<script>
+
+const paymentForm =
+    document.getElementById("paymentForm");
+
+const payButton =
+    document.getElementById("payButton");
+
+const paymentMessage =
+    document.getElementById("paymentMessage");
+
+
+paymentForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+
+        const fullname =
+            document
+                .getElementById("fullname")
+                .value
+                .trim();
+
+
+        const phone =
+            document
+                .getElementById("phone")
+                .value
+                .trim();
+
+
+        if (!fullname) {
+
+            paymentMessage.textContent =
+                "Please enter your full name.";
+
+            return;
+        }
+
+
+        if (!/^2547[0-9]{8}$/.test(phone)) {
+
+            paymentMessage.textContent =
+                "Please enter a valid M-PESA number, e.g. 254712345678.";
+
+            return;
+        }
+
+
+        payButton.disabled = true;
+
+        payButton.textContent =
+            "Sending request...";
+
+        paymentMessage.textContent =
+            "Connecting to the payment server...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/.netlify/functions/stkpush",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            fullname: fullname,
+                            phone: phone,
+                            amount: 500
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (response.ok && data.success) {
+
+                paymentMessage.textContent =
+                    "Payment request sent. Please check your phone for the M-PESA prompt and follow the instructions.";
+
+            } else {
+
+                paymentMessage.textContent =
+                    data.message ||
+                    "The payment request could not be sent.";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Payment error:",
+                error
+            );
+
+            paymentMessage.textContent =
+                "Unable to connect to the payment server. Please try again.";
+
+        }
+
+
+        payButton.disabled = false;
+
+        payButton.textContent =
+            "Pay Registration Fee";
+
+    }
+
+);
+
+</script>
+
+</body>
+
+</html>
