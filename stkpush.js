@@ -121,7 +121,7 @@ exports.handler = async (event) => {
             .toString("base64");
 
         const tokenResponse = await httpsRequest({
-            hostname: "sandbox.safaricom.co.ke",
+            hostname: "api.safaricom.co.ke",
             path: "/oauth/v1/generate?grant_type=client_credentials",
             method: "GET",
             headers: {
@@ -140,7 +140,7 @@ exports.handler = async (event) => {
                 body: JSON.stringify({
                     success: false,
                     message:
-                        "Could not obtain Daraja sandbox access token."
+                        "Could not obtain Daraja production access token."
                 })
             };
         }
@@ -188,7 +188,7 @@ exports.handler = async (event) => {
 
         const stkResponse = await httpsRequest({
 
-            hostname: "sandbox.safaricom.co.ke",
+            hostname: "api.safaricom.co.ke",
 
             path: "/mpesa/stkpush/v1/processrequest",
 
